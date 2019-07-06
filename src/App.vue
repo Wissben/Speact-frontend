@@ -1,213 +1,212 @@
 <template>
-  <main id="app">
-
+  <v-app>
     <v-container
       grid-list-md
-      text-xs-center
+      fluid
     >
       <v-layout
         row
         wrap
       >
-        <v-flex xs12>
-
-          <!-- The input -->
-          <div class="query">
-            <div
-              class="wrapper"
-              v-if="micro == false"
-            >
-              <i
-                class="material-icons iicon"
+        <v-flex
+          xs12
+          mt-3
+        >
+          <v-toolbar>
+            <v-toolbar-items>
+              <v-btn
+                flat
                 @click="microphone(true)"
-              >mic</i>
-              <input
-                :aria-label="config.locale.strings.queryTitle"
-                autocomplete="off"
-                v-model="query"
-                class="queryform"
-                @keyup.enter="submit()"
-                :placeholder="config.locale.strings.queryTitle"
-                autofocus
-                type="text"
+                v-if="micro == false"
               >
-              <i
-                class="material-icons iicon t2s"
+                <v-icon dark>mic_none</v-icon>
+              </v-btn>
+              <v-btn
+                flat
+                @click="microphone(true)"
+                v-if="micro == true"
+              >
+                <v-icon dark>mic</v-icon>
+              </v-btn>
+            </v-toolbar-items>
+
+            <v-text-field
+              single
+              :aria-label="config.locale.strings.queryTitle"
+              autocomplete="off"
+              v-model="query"
+              @keyup.enter="submit()"
+              :placeholder="config.locale.strings.queryTitle"
+              autofocus
+              type="text"
+            ></v-text-field>
+            <v-toolbar-items>
+              <v-btn
+                flat
                 @click="mute(true)"
                 v-if="muted == false"
-              >volume_up</i>
-              <i
-                class="material-icons iicon t2s"
+              >
+                <v-icon dark>volume_up</v-icon>
+              </v-btn>
+              <v-btn
+                flat
                 @click="mute(false)"
-                v-else
-              >volume_off</i>
-            </div>
-            <div
-              class="wrapper"
-              v-else
-            >
-              <i
-                class="material-icons iicon recording"
-                @click="microphone(false)"
-              >mic</i><input
-                class="queryform"
-                :placeholder="speech"
-                readonly
+                v-if="muted == true"
               >
-            </div>
-          </div>
+                <v-icon dark>volume_off</v-icon>
+              </v-btn>
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
+            <v-btn
+              round
+              color="blue light-blue"
+              dark
+              @click="resetAgent()"
+            >Reset agent</v-btn>
+            <v-btn flat>
+              <v-checkbox
+                v-model="asrSwitch"
+                :label="`Local ASR`"
+                color="blue light-blue"
+              ></v-checkbox>
+            </v-btn>
+            <v-btn flat>
+              <v-checkbox
+                v-model="debugSwitch"
+                :label="`Debug mode`"
+                color="blue light-blue"
+              ></v-checkbox>
+            </v-btn>
+          </v-toolbar>
 
         </v-flex>
-        <section class="wrapper ai-window">
 
-          <br>
-          <br>
-
-          <!-- Display Welcome Message -->
-          <div v-if="answers.length == 0 && online == true">
-            <h1 class="title mdc-typography--headline">
-              <div class="material-icons up">arrow_upward</div>
-              <br>
-              <br>
-              {{config.locale.strings.welcomeTitle}}
-
-              <p class="mdc-typography--body2">{{config.locale.strings.welcomeDescription}}</p>
-            </h1>
-          </div>
-
-          <!-- Display offline message -->
-          <div v-if="answers.length == 0 && online == false">
-            <h1 class="title mdc-typography--headline">
-              <div class="material-icons up">cloud_off</div>
-              <br>
-              <br>
-              {{config.locale.strings.offlineTitle}}
-
-              <p class="mdc-typography--body2">{{config.locale.strings.offlineDescription}}</p>
-            </h1>
-          </div>
-
-          <!-- Chat window -->
-          <table
-            v-for="a in answers"
-            class="chat-window"
+        <v-flex xs6>
+          <v-container
+            id="scroll-target"
+            class="scroll-y"
           >
+            <v-layout
+              v-scroll:#scroll-target="onScroll"
+              column
+              style="height: 500px"
+            >
+              <chat :answers=answers>
+              </chat>
+              <a id="bottom"></a>
 
-            <!-- Your messages -->
-            <tr>
-              <td class="bubble">{{a.query}}</td>
-            </tr>
+            </v-layout>
+          </v-container>
+        </v-flex>
 
-            <!-- Dialogflow messages -->
-            <tr>
-              <td>
+        <v-flex
+          xs3
+          mt-3
+        >
+          <info-card
+            v-if="answers.length > 0 "
+            :filesList=answers[answers.length-1].answer.files
+          >
+          </info-card>
+        </v-flex>
 
-                <!-- Bot message types / Speech -->
+        <v-flex
+          text-xs-left
+          mt-3
+        >
+          <v-card v-if="answers.length > 0 && debugSwitch">
+            <v-toolbar
+              color="light-blue"
+              dark
+            >
+              <v-toolbar-title>Debug</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-container
+              id="scroll-target"
+              class="scroll-y"
+            >
 
-                <div
-                  v-if="a.answer"
-                  class="bubble bot"
+              <v-layout
+                v-scroll:#scroll-target="onScroll2"
+                column
+                style="height: 500px"
+              >
+                <jsonTree
+                  v-if="answers.length > 0 && debugSwitch"
+                  :path="'res'"
+                  :data=answers[answers.length-1].answer.parsed
+                  highlightMouseoverNode
                 >
-                  {{a.answer.text}}
-                </div>
-
-                <!-- Google Assistant output -->
-                <!-- <div v-for="r in a.result.fulfillment.messages"> -->
-
-                <!-- Bot message types / Card -->
-
-                <!-- <div
-              class="mdc-card"
-              v-if="r.type == 'basic_card'"
-            >
-              <img
-                :title="r.image.accessibilityText"
-                :alt="r.image.accessibilityText"
-                class="mdc-card__media-item"
-                :src="r.image.url"
-                v-if="r.image"
-              >
-              <section class="mdc-card__primary">
-                <h1 class="mdc-card__title">{{r.title}}</h1>
-                <br>
-                <h2 class="mdc-card__subtitle">{{r.subtitle}}</h2>
-              </section>
-              <section class="mdc-card__supporting-text">
-                {{r.formattedText}}
-              </section>
-              <section
-                class="mdc-card__actions"
-                v-for="button in r.buttons"
-              >
-                <a
-                  class="mdc-button mdc-button--compact themed mdc-card__action"
-                  target="_blank"
-                  :href="button.openUrlAction.url"
-                >{{button.title}} <i class="material-icons openlink">open_in_new</i></a>
-              </section>
-            </div> -->
-
-                <!-- Bot message types / Carousel Card -->
-
-                <!-- Bot message types / List -->
-
-                <!-- Bot message types / Link Chip -->
-
-                <!-- Bot message types / Suggestion Chip -->
-
-                <!-- Bot message types / Google Suggestion Chip -->
-
-                <!-- </div> -->
-              </td>
-            </tr>
-          </table>
-
-          <br>
-          <p
-            class="copyright"
-            v-if="answers.length > 0"
-          >Proudly powered by <a href="https://ushakov.co">Ushakov</a> & <a href="https://dialogflow.com">Dialogflow</a></p>
-          <a id="bottom"></a>
-        </section>
-        <v-flex xs6>
-
-          <!-- File list display -->
-        </v-flex>
-        <v-list>
-          <v-list-tile
-            v-for="file in answers[answers.lentgth-1]"
-            :key="file"
-            avatar
-            @click=""
-          >
-          </v-list-tile>
-        </v-list>
-        <v-flex xs6>
-
+                </jsonTree>
+              </v-layout>
+            </v-container>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
+    <!-- Chat window -->
+    <!-- Display Welcome Message -->
+    <div v-if="answers.length == 0 && online == true">
+      <h1 class="title mdc-typography--headline">
+        <div class="material-icons up">arrow_upward</div>
+        <br>
+        <br>
+        {{config.locale.strings.welcomeTitle}}
 
-  </main>
+        <p class="mdc-typography--body2">{{config.locale.strings.welcomeDescription}}</p>
+      </h1>
+    </div>
+
+    <!-- Display offline message -->
+    <div v-if="answers.length == 0 && online == false">
+      <h1 class="title mdc-typography--headline">
+        <div class="material-icons up">cloud_off</div>
+        <br>
+        <br>
+        {{config.locale.strings.offlineTitle}}
+
+        <p class="mdc-typography--body2">{{config.locale.strings.offlineDescription}}</p>
+      </h1>
+    </div>
+  </v-app>
+
 </template>
 
 <style lang="sass">
 @import url('https://fonts.googleapis.com/css?family=Roboto')
 @import "App.sass"
+
+</style>
+
+<style>
+.v-toolbar {
+  border-radius: 10px;
+}
 </style>
 
 <script>
-import { ApiAiClient } from 'api-ai-javascript'
+// import { ApiAiClient } from 'api-ai-javascript'
 import config from './../config'
 import axios from 'axios'
+import ChatWindow from './components/ChatWindow.vue'
+import InfoCard from './components/InfoCard.vue'
+import VueJsonPretty from 'vue-json-pretty'
 
-const client = new ApiAiClient({ accessToken: config.app.token }) // <- replace it with yours
+// const client = new ApiAiClient({ accessToken: config.app.token }) // <- replace it with yours
 
 export default {
   name: 'app',
-  data: function () {
+  components: {
+    chat: ChatWindow,
+    infoCard: InfoCard,
+    jsonTree: VueJsonPretty
+  },
+  data: () => {
     return {
       answers: [],
+      debugSwitch: true,
+      asrSwitch: false,
       query: '',
       speech: config.locale.strings.voiceTitle,
       micro: false,
@@ -226,8 +225,14 @@ export default {
     }
   },
   methods: {
-    submit () {
-      axios.get('http://127.0.0.1:5000/api/req?text=' + this.query).then(r => {
+    onScroll (e) {
+      this.offsetTop = e.target.scrollDown
+    },
+    onScroll2 (e) {
+      this.offsetTop = e.target.scrollDown
+    },
+    async submit () {
+      await axios.get('http://127.0.0.1:5000/api/req?text=' + this.query).then(r => {
         let obj = {
           "query": this.query,
           "answer": r.data
@@ -271,25 +276,31 @@ export default {
       let self = this // <- correct scope
 
       if (mode == true) {
-        //Must replace with a call to the api 
-        let recognition = new webkitSpeechRecognition() // <- chrome speech recognition
+        if (asrSwitch == false) {
+          //Must replace with a call to the api 
+          let recognition = new webkitSpeechRecognition() // <- chrome speech recognition
 
-        recognition.interimResults = true
-        recognition.lang = config.locale.settings.recognitionLang
-        recognition.start()
+          recognition.interimResults = true
+          recognition.lang = config.locale.settings.recognitionLang
+          recognition.start()
 
-        recognition.onresult = function (event) {
-          for (var i = event.resultIndex; i < event.results.length; ++i) {
-            self.speech = event.results[i][0].transcript
+          recognition.onresult = function (event) {
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+              self.speech = event.results[i][0].transcript
+            }
+          }
+
+          recognition.onend = function () {
+            recognition.stop()
+            self.micro = false
+            self.autosubmit(self.speech)
           }
         }
 
-        recognition.onend = function () {
-          recognition.stop()
-          self.micro = false
-          self.autosubmit(self.speech)
-        }
       }
+    },
+    resetAgent () {
+      console.log('RESETTING AGENT ...');
     }
   }
 }
