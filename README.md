@@ -47,6 +47,7 @@ computer manipulation using spoken directives.
 ## Packages install
 
 `npm install`
+</br>
 `npm run dev`
 
 -------------------------------
