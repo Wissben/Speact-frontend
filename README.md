@@ -7,27 +7,11 @@
 ------------------------------
   
 
-Recent advances in machine learning are making it clear that the near future will be
+Recent advances in machine learning are making it clear that the near future will be dominated by artificial intelligence. In particular, human-machine interaction received a great focus from the world’s biggest computer science industries. This is especially true with the surge of deep learning which paved the way for computers to reach a high level of language understanding.
 
-dominated by artificial intelligence. In particular, human-machine interaction received a
+Nonetheless, these great advances did not yet reach human level communications and seem to be lagging behind. Computers are either restricted to the management of specific tasks like smart assistants or lack the actual language understanding like chatbots.
 
-great focus from the world’s biggest computer science industries. This is especially true
-
-with the surge of deep learning which paved the way for computers to reach a high level of
-
-language understanding.
-
-Nonetheless, these great advances did not yet reach human level communications and
-
-seem to be lagging behind. Computers are either restricted to the management of specific
-
-tasks like smart assistants or lack the actual language understanding like chatbots.
-
-Through this work, We familiarize ourselves with spoken dialogue systems and understand their components. By taking advantage of artificial intelligence approaches, ranging
-
-from acoustic models, to natural language generation, while going through natural language understanding and dialogue management ; our solution can assist the user with
-
-computer manipulation using spoken directives.
+Through this work, We familiarize ourselves with spoken dialogue systems and understand their components. By taking advantage of artificial intelligence approaches, ranging from acoustic models, to natural language generation, while going through natural language understanding and dialogue management ; our solution can assist the user with computer manipulation using spoken directives.
 
 -------------------------------
 ## User Interface
