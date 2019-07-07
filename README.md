@@ -2,6 +2,10 @@
 
 # Speact frontend
 
+<div style="text-align: center"> 
+  <img src="src/assets/speact-logo/speact-vert.png" width="40%" alt="Speact main app" />
+</div>
+
 ### A Free/Open source smart personal assistant.
 
 ------------------------------
