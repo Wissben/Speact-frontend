@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-toolbar
-      color="light-blue"
+      color="#1c7ed6"
       dark
     >
       <v-toolbar-title>Files</v-toolbar-title>

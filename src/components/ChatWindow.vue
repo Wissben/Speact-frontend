@@ -72,11 +72,11 @@ export default {
   width: 300px;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px;
 }
 
 .messages {
-  margin-top: 30px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -87,6 +87,8 @@ export default {
   margin-top: 5px;
   margin-bottom: 5px;
   display: inline-block;
+  font-size: 16px;
+  font-family: "yanis";
 }
 
 .yours {
@@ -129,7 +131,7 @@ export default {
 .mine .message {
   color: white;
   margin-left: 25%;
-  background: linear-gradient(to bottom, #00d0ea 0%, #0085d1 100%);
+  background: linear-gradient(to bottom, #fcc2d7 0%, #1c7ed6 100%);
   background-attachment: fixed;
   position: relative;
 }
@@ -142,7 +144,7 @@ export default {
   right: -8px;
   height: 20px;
   width: 20px;
-  background: linear-gradient(to bottom, #00d0ea 0%, #0085d1 100%);
+  background: linear-gradient(to bottom, #fcc2d7 0%, #1c7ed6 100%);
   background-attachment: fixed;
   border-bottom-left-radius: 15px;
 }

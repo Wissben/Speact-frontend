@@ -1,4 +1,5 @@
 <template>
+
   <v-app>
     <v-container
       grid-list-md
@@ -8,6 +9,16 @@
         row
         wrap
       >
+        <v-flex xs12>
+          <div class="text-xs-center">
+            <img
+              src="src/assets/speact-logo/speact-long.png"
+              alt="Speact"
+              height="65px"
+            >
+          </div>
+
+        </v-flex>
         <v-flex
           xs12
           mt-3
@@ -19,14 +30,14 @@
                 @click="microphone(true)"
                 v-if="micro == false"
               >
-                <v-icon dark>mic_none</v-icon>
+                <v-icon color="#e385a7">mic_none</v-icon>
               </v-btn>
               <v-btn
                 flat
-                @click="microphone(true)"
+                @click="microphone(false)"
                 v-if="micro == true"
               >
-                <v-icon dark>mic</v-icon>
+                <v-icon color="#e385a7">mic</v-icon>
               </v-btn>
             </v-toolbar-items>
 
@@ -46,20 +57,20 @@
                 @click="mute(true)"
                 v-if="muted == false"
               >
-                <v-icon dark>volume_up</v-icon>
+                <v-icon color="#e385a7">volume_up</v-icon>
               </v-btn>
               <v-btn
                 flat
                 @click="mute(false)"
                 v-if="muted == true"
               >
-                <v-icon dark>volume_off</v-icon>
+                <v-icon color="#e385a7">volume_off</v-icon>
               </v-btn>
             </v-toolbar-items>
             <v-spacer></v-spacer>
             <v-btn
               round
-              color="blue light-blue"
+              color="#1c7ed6"
               dark
               @click="resetAgent()"
             >Reset agent</v-btn>
@@ -67,14 +78,14 @@
               <v-checkbox
                 v-model="asrSwitch"
                 :label="`Local ASR`"
-                color="blue light-blue"
+                color="#1c7ed6"
               ></v-checkbox>
             </v-btn>
             <v-btn flat>
               <v-checkbox
                 v-model="debugSwitch"
                 :label="`Debug mode`"
-                color="blue light-blue"
+                color="#1c7ed6"
               ></v-checkbox>
             </v-btn>
           </v-toolbar>
@@ -116,7 +127,7 @@
         >
           <v-card v-if="answers.length > 0 && debugSwitch">
             <v-toolbar
-              color="light-blue"
+              color="#1c7ed6"
               dark
             >
               <v-toolbar-title>Debug</v-toolbar-title>
@@ -130,7 +141,7 @@
               <v-layout
                 v-scroll:#scroll-target="onScroll2"
                 column
-                style="height: 500px"
+                style="height: 400px"
               >
                 <jsonTree
                   v-if="answers.length > 0 && debugSwitch"
@@ -257,11 +268,16 @@ export default {
     },
     handle (response) {
       if (response) {
-        let speech = new SpeechSynthesisUtterance(response.answer.text)
-        speech.voiceURI = 'native'
-        speech.lang = config.locale.settings.speechLang
+        let synth = window.speechSynthesis;
+        let speech = new SpeechSynthesisUtterance(response.answer.text);
+        speech.voice = window.speechSynthesis.getVoices()[1];
+        // speech.voiceURI = "urn:moz-tts:speechd:Oriya?or";
+        // console.log(window.speechSynthesis.getVoices());
+        // speech.lang = 'en-US';
 
-        if (this.muted == false) window.speechSynthesis.speak(speech) // <- Speech output if microphone is allowed
+        if (this.muted == false) {
+          synth.speak(speech) // <- Speech output if microphone is allowed
+        }
       }
     },
     autosubmit (suggestion) {
@@ -275,8 +291,8 @@ export default {
       this.micro = mode
       let self = this // <- correct scope
 
-      if (mode == true) {
-        if (asrSwitch == false) {
+      if (true == true) {
+        if (false == false) {
           //Must replace with a call to the api 
           let recognition = new webkitSpeechRecognition() // <- chrome speech recognition
 
