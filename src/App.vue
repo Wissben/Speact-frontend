@@ -317,7 +317,7 @@ export default {
     },
     resetAgent () {
       console.log('RESETTING AGENT ...');
-      this.autosubmit('Reboot agent')
+      this.autosubmit('Reset agent')
     }
   }
 }
