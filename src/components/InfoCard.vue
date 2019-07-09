@@ -66,7 +66,7 @@ export default {
   name: "InfoCard",
   props: {
     filesList: {
-      type: Array,
+      type: Object,
       default: []
     },
   },
@@ -75,22 +75,22 @@ export default {
       this.items = [];
       this.items2 = [];
       this.filesListInternal = newVal;
-
-      for (let i = 0; i < this.filesListInternal['files'].length; i++) {
+      console.log(this.filesListInternal);
+      for (let i = 0; i < this.filesListInternal['dirs'].length; i++) {
         this.items.push(
           {
             icon: 'folder',
             iconClass: 'grey light-white white--text',
-            title: this.filesListInternal['files'][i]
+            title: this.filesListInternal['dirs'][i]
           }
         )
       }
-      for (let i = 0; i < this.filesListInternal['dirs'].length; i++) {
+      for (let i = 0; i < this.filesListInternal['files'].length; i++) {
         this.items2.push(
           {
             icon: 'folder',
             iconClass: 'grey light-white white--text',
-            title: this.filesListInternal['dirs'][i]
+            title: this.filesListInternal['files'][i]
           }
         )
       }
