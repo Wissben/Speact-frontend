@@ -32,7 +32,13 @@ Through this work, We familiarize ourselves with spoken dialogue systems and und
 
 -------------------------------
 
+First you will need to install : </br>
+* NodeJS
+* npm
+
 ## Packages install
+
+To install the deps and run the dev server, simply do : </br>
 
 `npm install`
 </br>
