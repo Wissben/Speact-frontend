@@ -26,6 +26,8 @@ Through this work, We familiarize ourselves with spoken dialogue systems and und
 -------------------------------
 ## Backend
 
+The complete backend code can be found [here](https://github.com/ressay/Speact-backend)
+
 -------------------------------
 
 ## Installation
